@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <context:property-placeholder location="WEB-INF/conf/db.properties" />
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="maxActive" value="${jdbc.maxPoolSize}" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*"
+                propagation="REQUIRED"
+                isolation="DEFAULT"
+                timeout="10"
+                read-only="false"
+                rollback-for="java.lang.Exception" />
+        </tx:attributes>
+    </tx:advice>
+
+	<aop:config>
+	    <aop:advisor advice-ref="transactionAdvice"
+	        pointcut="execution(* jp.co.skillup.bssapp.business.service.*Service.*(..))" />
+	</aop:config>
+
+	<bean id="domaConfig" class="jp.co.skillup.bssapp.common.config.DomaConfig">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="dialect" ref="dialect"></property>
+	</bean>
+
+	<bean id="dialect" class="org.seasar.doma.jdbc.dialect.SqliteDialect" />
+
+	<!-- ################# アクション設定 ################# -->
+	<!-- ログインアクション -->
+    <bean name="/login/execute" class="jp.co.skillup.bssapp.business.action.LoginAction">
+		<property name="service" ref="loginService" />
+    </bean>
+
+    <!-- 検索アクション -->
+    <bean name="/search/execute" class="jp.co.skillup.bssapp.business.action.SearchAction">
+		<property name="service" ref="booksService" />
+    </bean>
+
+    <!-- 詳細アクション -->
+    <bean name="/detail" class="jp.co.skillup.bssapp.business.action.DetailAction">
+		<property name="service" ref="booksService" />
+    </bean>
+
+    <!-- 編集アクション -->
+    <bean name="/edit" class="jp.co.skillup.bssapp.business.action.EditAction">
+		<property name="service" ref="booksService" />
+    </bean>
+
+    <!-- 編集実行アクション -->
+    <bean name="/edit/execute" class="jp.co.skillup.bssapp.business.action.EditExecuteAction">
+		<property name="service" ref="booksService" />
+    </bean>
+
+    <!-- 削除確認アクション -->
+    <bean name="/delete/confirm" class="jp.co.skillup.bssapp.business.action.DeleteConfirmAction">
+		<property name="service" ref="booksService" />
+    </bean>
+
+    <!-- 削除実行アクション -->
+    <bean name="/delete/execute" class="jp.co.skillup.bssapp.business.action.DeleteExecuteAction">
+		<property name="service" ref="booksService" />
+    </bean>
+
+    <!-- ################# サービス設定 ################# -->
+    <bean id="loginService" class="jp.co.skillup.bssapp.business.service.LoginServiceImpl">
+        <property name="userInfoDao" ref="userInfoDao" />
+        <property name="permissionInfoDao" ref="permissionInfoDao" />
+    </bean>
+
+    <bean id="booksService" class="jp.co.skillup.bssapp.business.service.BooksServiceImpl">
+        <property name="booksDao" ref="booksDao" />
+    </bean>
+
+    <!-- ################# DAO設定 ################# -->
+    <bean id="userInfoDao"
+        class="jp.co.skillup.bssapp.dataaccess.dao.UserInfoDaoImpl" autowire="constructor">
+        <constructor-arg ref="domaConfig" />
+    </bean>
+
+    <bean id="permissionInfoDao"
+        class="jp.co.skillup.bssapp.dataaccess.dao.PermissionInfoDaoImpl" autowire="constructor">
+        <constructor-arg ref="domaConfig" />
+    </bean>
+
+    <bean id="booksDao"
+        class="jp.co.skillup.bssapp.dataaccess.dao.BooksDaoImpl" autowire="constructor">
+        <constructor-arg ref="domaConfig" />
+    </bean>
+</beans>

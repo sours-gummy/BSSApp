@@ -1,0 +1,1 @@
+delete from BOOKS where BOOKS_ID = /* books.booksId */1 and VERSION = /* books.version */1

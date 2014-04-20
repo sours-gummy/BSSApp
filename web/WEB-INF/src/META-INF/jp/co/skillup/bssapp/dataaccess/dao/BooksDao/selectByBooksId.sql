@@ -1,0 +1,1 @@
+select * from BOOKS where BOOKS_ID = /* booksId */0

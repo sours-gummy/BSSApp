@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://struts.apache.org/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+    <!-- テンプレート -->
+    <definition name="template" path="/view/common/main.jsp">
+		<put name="title_name" value="template" />
+		<put name="header" value="/view/common/header.jsp" />
+		<put name="content" value="/view/common/content.jsp" />
+		<put name="footer" value="/view/common/footer.jsp" />
+	</definition>
+
+    <!-- 書籍検索画面 -->
+	<definition name="view.search" extends="template" >
+		<put name="title_name" value="書籍検索画面" />
+		<put name="content" value="/view/common/search.jsp" />
+		<putList name="breadcrumbs.list">
+		    <item link="書籍検索" value="/search"></item>
+		</putList>
+	</definition>
+
+	<!-- 書籍検索結果画面 -->
+	<definition name="view.search_result" extends="template" >
+		<put name="title_name" value="書籍検索結果画面" />
+		<put name="content" value="/view/common/search_result.jsp" />
+	</definition>
+
+	<!-- 書籍詳細画面 -->
+	<definition name="view.detail" extends="template" >
+		<put name="title_name" value="書籍詳細画面" />
+		<put name="content" value="/view/common/detail.jsp" />
+	</definition>
+
+	<!-- 書籍編集画面 -->
+	<definition name="view.edit" extends="template" >
+		<put name="title_name" value="書籍編集画面" />
+		<put name="content" value="/view/common/edit.jsp" />
+	</definition>
+
+	<!-- 書籍編集確認画面 -->
+	<definition name="view.edit_confirm" extends="template" >
+		<put name="title_name" value="書籍編集確認画面" />
+		<put name="content" value="/view/common/edit_confirm.jsp" />
+	</definition>
+
+	<!-- 書籍編集実施結果画面 -->
+	<definition name="view.edit_result" extends="template" >
+		<put name="title_name" value="書籍編集実施結果画面" />
+		<put name="content" value="/view/common/edit_result.jsp" />
+	</definition>
+
+	<!-- 書籍編集確認画面 -->
+	<definition name="view.delete.confirm" extends="template" >
+		<put name="title_name" value="書籍削除確認画面" />
+		<put name="content" value="/view/common/delete_confirm.jsp" />
+	</definition>
+
+	<!-- 書籍編集確認画面 -->
+	<definition name="view.delete.result" extends="template" >
+		<put name="title_name" value="書籍削除確認画面" />
+		<put name="content" value="/view/common/delete_result.jsp" />
+	</definition>
+</tiles-definitions>

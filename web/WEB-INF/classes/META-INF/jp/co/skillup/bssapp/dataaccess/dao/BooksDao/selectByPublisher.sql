@@ -1,0 +1,1 @@
+select * from BOOKS where PUBLISHER like /* @contain(publisher) */'%X%' escape '$'

@@ -1,0 +1,1 @@
+select * from BOOKS where ISBN like /* @contain(isbn) */'%X%' escape '$'

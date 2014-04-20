@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="Shift_JIS" ?>
+<!DOCTYPE struts-config PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+        "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+<struts-config>
+
+  <!-- アクション・フォームBeanの指定 -->
+  <form-beans>
+      <form-bean name="LoginForm" type="jp.co.skillup.bssapp.business.form.LoginForm" />
+      <form-bean name="SearchForm" type="jp.co.skillup.bssapp.business.form.SearchForm" />
+      <form-bean name="DetailForm" type="jp.co.skillup.bssapp.business.form.DetailForm" />
+      <form-bean name="EditForm" type="jp.co.skillup.bssapp.business.form.EditForm" />
+      <form-bean name="EditConfirmForm" type="jp.co.skillup.bssapp.business.form.EditConfirmForm" />
+      <form-bean name="EditExecuteForm" type="jp.co.skillup.bssapp.business.form.EditExecuteForm" />
+      <form-bean name="DeleteConfirmForm" type="jp.co.skillup.bssapp.business.form.DeleteConfirmForm" />
+      <form-bean name="DeleteExecuteForm" type="jp.co.skillup.bssapp.business.form.DeleteExecuteForm" />
+      <form-bean name="ControllDispatchForm" type="jp.co.skillup.bssapp.business.form.ControllDispatchForm" />
+      <form-bean name="LogoutForm" type="jp.co.skillup.bssapp.business.form.LogoutForm" />
+      <form-bean bame="SearchTopForm" type="org.apache.struts.validator.DynaValidatorActionForm" />
+  </form-beans>
+
+	<global-exceptions>
+		<exception type="java.lang.Exception"
+          key="errors.myerror"
+          handler="jp.co.skillup.bssapp.exception.GSSExceptionHandler"
+          path="/view/error/error.jsp" />
+	</global-exceptions>
+
+	<global-forwards>
+	    <forward name="fail" path="/view/login.jsp" />
+	</global-forwards>
+
+  <!-- アクションクラスの振る舞いを指定 -->
+  <action-mappings>
+
+      <!-- ログイン画面 -->
+      <action path="/login" forward="/view/login.jsp" />
+
+      <!-- 検索画面 -->
+      <action path="/search" forward="view.search" />
+
+      <!-- ログイン -->
+      <action path="/login/execute"
+          type="org.springframework.web.struts.DelegatingActionProxy"
+          name="LoginForm"
+          scope="request"
+          validate="true"
+          input="/view/login.jsp">
+          <forward name="success" path="/search.do" redirect="true" />
+          <forward name="failure" path="/login.do" redirect="true" />
+      </action>
+
+      <!-- ログアウト -->
+      <action path="/logout"
+          type="jp.co.skillup.bssapp.business.action.LogoutAction"
+          name="LogoutForm"
+          scope="request">
+          <forward name="success" path="/login.do" redirect="true" />
+      </action>
+
+      <!-- 検索 -->
+      <action path="/search/execute"
+          type="org.springframework.web.struts.DelegatingActionProxy"
+          name="SearchForm"
+          scope="request">
+          <forward name="success" path="view.search_result" />
+      </action>
+
+      <!-- 詳細・編集・削除切り替え -->
+      <action path="/dispatch"
+          type="jp.co.skillup.bssapp.business.action.ControllDispatchAction"
+          name="ControllDispatchForm"
+          parameter="method"
+          scope="request">
+          <forward name="detail" path="/detail.do" />
+          <forward name="edit" path="/edit.do" />
+          <forward name="delete" path="/delete/confirm.do" />
+      </action>
+
+      <!-- 詳細 -->
+      <action path="/detail"
+          type="org.springframework.web.struts.DelegatingActionProxy"
+          name="DetailForm"
+          scope="request">
+          <forward name="success" path="view.detail" />
+      </action>
+
+      <!-- 編集 -->
+      <action path="/edit"
+          type="org.springframework.web.struts.DelegatingActionProxy"
+          name="EditForm"
+          scope="request">
+          <forward name="success" path="view.edit" />
+      </action>
+
+      <!-- 編集確認 -->
+      <action path="/edit/confirm"
+          type="jp.co.skillup.bssapp.business.action.EditConfirmAction"
+          name="EditConfirmForm"
+          scope="request">
+          <forward name="success" path="view.edit_confirm" />
+      </action>
+
+      <!-- 編集実行 -->
+      <action path="/edit/execute"
+          type="org.springframework.web.struts.DelegatingActionProxy"
+          name="EditExecuteForm"
+          scope="request">
+          <forward name="success" path="view.edit_result" />
+      </action>
+
+      <!-- 削除確認 -->
+      <action path="/delete/confirm"
+          type="org.springframework.web.struts.DelegatingActionProxy"
+          name="DeleteConfirmForm"
+          scope="request">
+          <forward name="success" path="view.delete.confirm" />
+      </action>
+
+      <!-- 削除実行 -->
+      <action path="/delete/execute"
+          type="org.springframework.web.struts.DelegatingActionProxy"
+          name="DeleteExecuteForm"
+          scope="request">
+          <forward name="success" path="view.delete.result" />
+      </action>
+
+  </action-mappings>
+  <message-resources parameter="resources.application" />
+
+  <plug-in className="org.apache.struts.tiles.TilesPlugin">
+      <set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />
+  </plug-in>
+
+  <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+      <set-property property="pathnames" value="/WEB-INF/validator-rules.xml, /WEB-INF/validation.xml" />
+  </plug-in>
+</struts-config>

@@ -1,0 +1,1 @@
+select * from PERMISSION_INFO where PERMISSION_INFO_ID = /* permissionInfoId */0

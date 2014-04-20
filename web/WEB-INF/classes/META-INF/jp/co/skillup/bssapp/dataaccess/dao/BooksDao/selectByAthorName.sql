@@ -1,0 +1,1 @@
+select * from BOOKS where AUHTOR_NAME like /* @contain(authorName) */'%X%' escape '$'
